@@ -24,9 +24,9 @@ jobs:
           azcliversion: latest
           inlineScript: az bicep install
 
-      - name: Validate folder names (lowercase alphabets only, except Build)
+      - name: Validate folder names (lowercase alphabets only, except Build, .git, .github)
         run: |
-          invalid_folders=$(find . -mindepth 1 -maxdepth 1 -type d ! -iname 'build' -printf '%f\n' | grep -Ev '^[a-z]+$' || true)
+          invalid_folders=$(find . -mindepth 1 -maxdepth 1 -type d ! -iname 'build' ! -iname '.git' ! -iname '.github' -printf '%f\n' | grep -Ev '^[a-z]+$' || true)
           if [ -n "$invalid_folders" ]; then
             echo "Invalid folder names detected (must be only lowercase alphabets):"
             echo "$invalid_folders"
@@ -35,7 +35,7 @@ jobs:
 
       - name: Validate Bicep file names (lowercase alphabets and hyphen, @YYYY-MM-DD.bicep)
         run: |
-          invalid_files=$(find . -type f -name '*.bicep' ! -path './Build/*' | grep -Ev './[a-z-]+@[0-9]{4}-[0-9]{2}-[0-9]{2}\.bicep$' || true)
+          invalid_files=$(find . -type f -name '*.bicep' ! -path './Build/*' ! -path './.git/*' ! -path './.github/*' | grep -Ev './[a-z-]+@[0-9]{4}-[0-9]{2}-[0-9]{2}\.bicep$' || true)
           if [ -n "$invalid_files" ]; then
             echo "Invalid Bicep file names detected (must match <lowercase and hyphen>@YYYY-MM-DD.bicep):"
             echo "$invalid_files"
