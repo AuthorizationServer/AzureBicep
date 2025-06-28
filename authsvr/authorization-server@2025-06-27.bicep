@@ -7,7 +7,10 @@ type application = {
   }
   tags: object
   applicationInsightsName: string
-  logAnalyticsName: string
+  logAnalyticsWorkspace: {
+    name: string
+    retentionInDays: int
+  }
 }
 
 var applicationName = 'AuthSvr'
@@ -34,7 +37,10 @@ func getApplication(tenant string, location string, moduleName string, repositor
     ApplicationName: applicationName
   }
   applicationInsightsName: '${applicationName}-${toLower(tenant)}-ai-${locationShortNames[location]}'
-  logAnalyticsName: '${applicationName}-${toLower(tenant)}-la-${locationShortNames[location]}'
+  logAnalyticsWorkspace: {
+    name: '${applicationName}-${toLower(tenant)}-la-${locationShortNames[location]}'
+    retentionInDays: 30
+  }
 }
 
 
