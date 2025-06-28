@@ -13,17 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_ACR }}
-
-      - name: Set up Azure CLI
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: az bicep install
-
       - name: Validate folder names (lowercase alphabets only, except Build, .git, .github)
         run: |
           invalid_folders=$(find . -mindepth 1 -maxdepth 1 -type d ! -iname 'build' ! -iname '.git' ! -iname '.github' -printf '%f\n' | grep -Ev '^[a-z]+$' || true)
@@ -41,6 +30,17 @@ jobs:
             echo "$invalid_files"
             exit 1
           fi
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_ACR }}
+
+      - name: Set up Azure CLI
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: az bicep install
 
       - name: Build and Publish Bicep files to ACR
         if: github.ref == 'refs/heads/main'
