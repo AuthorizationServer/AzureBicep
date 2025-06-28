@@ -20,9 +20,9 @@ jobs:
 
       - name: Set up Azure CLI
         uses: azure/cli@v2
-
-      - name: Install Bicep CLI
-        run: az bicep install
+        with:
+          azcliversion: latest
+          inlinesScript: az bicep install
 
       - name: Validate folder names (lowercase alphabets only, except Build)
         run: |
