@@ -15,6 +15,10 @@ type application = {
 
 var applicationName = 'AuthSvr'
 
+var resourceTypeShortNames = {
+  'Microsoft.Web/serverfarms': 'asp'
+}
+
 var locationShortNames = {
   'East US': 'eus'
   'West US': 'wus'
@@ -43,4 +47,10 @@ func getApplication(tenant string, location string, moduleName string, repositor
   }
 }
 
+@export()
+func getFullResourceName(applicationName string, tenant string, resourceName string, resourceType string, location string) string => 
+  '${applicationName}-${toLower(tenant)}-${toLower(resourceName)}-${resourceTypeShortNames[resourceType]}-${locationShortNames[location]}'
 
+  @export()
+func getFullResourceNameNoLocation(applicationName string, tenant string, resourceName string, resourceType string) string => 
+  '${applicationName}-${toLower(tenant)}-${toLower(resourceName)}-${resourceTypeShortNames[resourceType]}'
